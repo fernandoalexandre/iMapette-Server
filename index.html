@@ -1,0 +1,139 @@
+<html>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=true"></script>
+    <body onLoad="initialize();">
+        <div id="wrapper">
+            <div id=title>
+                <h1>{{ title }}</h1>
+            </div>
+
+            {% if false %}
+            <div id="login_div">
+                <table>
+                    <tr>
+                        <th>User ID</th>
+                    </tr>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.user_id }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <table>
+                    <tr>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Accuracy</th>
+                        <th>Altitude</th>
+                        <th>Speed</th>
+                        <th>Timestamp</th>
+                        <th>User ID</th>
+                    </tr>
+                    {% for spot in spots %}
+                    <tr>
+                        <td>{{ spot.latd }}</td>
+                        <td>{{ spot.longd }}</td>
+                        <td>{{ spot.accuracy }}</td>
+                        <td>{{ spot.altitude }}</td>
+                        <td>{{ spot.speed }}</td>
+                        <td>{{ spot.timestamp }}</td>
+                        <td>{{ spot.user_id }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% endif %}
+            <div id="main_div">
+                <div id="map_canvas"></div>
+            </div>
+            <img style="float:right; margin-top:5px;"
+            src="http://code.google.com/appengine/images/appengine-noborder-120x30.gif" alt="Powered by Google App Engine" />
+        </div>
+
+        <script type="text/javascript">
+var paths = [{% for path in paths %}
+        [{% for point in path %}
+            new google.maps.LatLng({{ point.latd }}, {{ point.longd }}){% if not forloop.last %},{% endif %}{% endfor %}
+            ]{% if not forloop.last %},{% endif %}{% endfor %}];
+var map;
+
+function initialize() {
+    var latlng = new google.maps.LatLng(38.710556, -9.176418);
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map(document.getElementById("map_canvas"),
+        myOptions);
+
+    var p;
+
+    for(var i = 0; i < paths.length; i++) {
+        p = new google.maps.Polyline({
+            path: paths[i],
+            strokeColor: "#00FF00",
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+            });
+
+        p.setMap(map);
+    };
+
+    var marker;
+    var myLatLng;
+
+    {% for point in spots %}
+    myLatLng = new google.maps.LatLng({{ point.latd }}, {{ point.longd }});
+    marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title:"A spot!"
+        });
+    google.maps.event.addListener(marker, 'click', function() {
+            var date = new Date();
+            date.setTime({{point.timestamp}});
+            var c = '<table>'+
+            '<tr>' +
+            '<td>User</td>' +
+            '<td>{{point.user_id}}</td>' +
+            '</tr><tr>' +
+            '<td>Altitude</td>' +
+            '<td>{{point.altitude}}</td>' +
+            '</tr><tr>' +
+            '<td>Speed</td>' +
+            '<td>{{point.speed}}</td>' +
+            '</tr><tr>' +
+            '<td>Accuracy</td>' +
+            '<td>{{point.accuracy}}</td>' +
+            '</tr><tr>' +
+            '<td>Timestamp</td>' +
+            '<td>' + date.toUTCString() + '</td>' +
+            '</tr>' +
+            '</table>';
+
+            var infoWindow = new google.maps.InfoWindow({
+                content: c
+                });
+            infoWindow.open(map, marker);
+        });
+
+    var draw_circle = new google.maps.Circle({
+            center: new google.maps.LatLng({{point.latd}}, {{point.longd}}),
+            radius: {{point.accuracy}},
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35,
+            map: map
+            });
+    {% endfor %}
+}
+    </script>
+    </body>
+</html>

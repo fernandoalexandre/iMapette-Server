@@ -1,0 +1,42 @@
+html {
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+table {
+	display:block;
+	border: 1px solid #000;
+}
+
+th {
+	border: 1px solid #000;
+}
+
+td {
+	border: 1px solid #000;
+}
+
+div#wrapper {
+	width: 80%;
+	margin-left: 10%;
+	border: solid 1px #000000;
+}
+
+div#title {
+	text-align: center;
+}
+
+div#login_div {
+	text-align: right;
+	margin:20px;
+	padding: 5px;
+	border: solid 1px #000000;
+}
+
+div#main_div {
+	
+}
+
+div#map_canvas {
+	width: 100%;
+	height: 400px;
+}

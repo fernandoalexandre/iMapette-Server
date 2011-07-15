@@ -1,0 +1,14 @@
+application: leimapette
+version: 18
+runtime: python
+api_version: 1
+
+builtins:
+- remote_api: on
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /.*
+  script: iMapette.py

@@ -1,0 +1,7 @@
+indexes:
+- kind: Spot
+  properties:
+  - name: user_id
+  - name: timestamp
+    direction: desc
+
