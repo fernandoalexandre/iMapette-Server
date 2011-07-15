@@ -1,0 +1,7 @@
+h1. Le iMapette
+
+Le iMapette is composed of currently two parts: Google App Engine server with a public API and a Android Application which collects geographic positions and uploads them to the server.
+
+h1. Google App Engine Server
+
+Made in Python, uses an HTTP API using POST and JSON when returning a set of geographic points saved on the server.
